@@ -1,20 +1,71 @@
-import { registerMicroApps, start } from "qiankun";
+import {
+  initGlobalState,
+  registerMicroApps,
+  start,
+  runAfterFirstMounted,
+  setDefaultMountApp,
+} from "qiankun";
 
 export function initQK() {
-  registerMicroApps([
+  registerMicroApps(
+    [
+      {
+        name: "react-vite",
+        entry: "//localhost:5171",
+        container: "#slave-wrapper",
+        activeRule: "/react-vite",
+      },
+      {
+        name: "vue-vite",
+        entry: "//localhost:5172",
+        container: "#slave-wrapper",
+        activeRule: "/vue-vite",
+      },
+    ],
     {
-      name: "react-vite",
-      entry: "//localhost:5174",
-      container: "#slave-wrapper",
-      activeRule: "/react-vite",
-    },
-    {
-      name: "vue-vite",
-      entry: "//localhost:5175",
-      container: "#slave-wrapper",
-      activeRule: "/vue-vite",
-    },
-  ]);
+      beforeLoad: [
+        async (app) => {
+          console.log("before load", app.name);
+        },
+      ],
+      beforeMount: [
+        async (app) => {
+          console.log("before mount", app.name);
+        },
+      ],
+      afterUnmount: [
+        async (app) => {
+          console.log("after unmount", app.name);
+        },
+      ],
+    }
+  );
 
   start();
+
+  const { onGlobalStateChange, setGlobalState } = initGlobalState({
+    user: {
+      name: "x1028",
+      age: 26,
+      sex: "male",
+    },
+  });
+
+  onGlobalStateChange((value, prev) => {
+    console.log("onGlobalStateChange", value, prev);
+  });
+
+  setGlobalState({
+    user: {
+      name: "xf",
+      age: 20,
+      sex: "femail",
+    },
+  });
+
+  setDefaultMountApp("/react-vite");
+
+  runAfterFirstMounted(() => {
+    console.log("runAfterFirstMounted");
+  });
 }
