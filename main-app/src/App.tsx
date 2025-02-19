@@ -1,20 +1,8 @@
-import { useEffect } from "react";
-
-import { initQK } from "./initQK";
+import router from "./routes";
+import { RouterProvider } from "react-router-dom";
 
 function App() {
-  useEffect(() => {
-    initQK();
-  }, []);
-
-  return (
-    <>
-      <div>header</div>
-      <section>
-        <div id="slave-wrapper" />
-      </section>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
